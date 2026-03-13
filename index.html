@@ -4,6 +4,7 @@
 <title>5+5 Patata Clicker</title>
 
 <style>
+
 body{
     font-family: Arial;
     text-align:center;
@@ -24,7 +25,7 @@ body{
 button{
     padding:10px 20px;
     font-size:16px;
-    margin:8px;
+    margin:6px;
 }
 
 .worker{
@@ -63,10 +64,6 @@ Better Click (+1) Cost: <span id="clickCost">10</span>
 
 <br>
 
-<button onclick="buyWorker()">
-Potatitio 👷 Cost: <span id="workerCost">1000</span>
-</button>
-
 <button onclick="buyFarm()">
 Farm 🚜 Cost: <span id="farmCost">5000</span>
 </button>
@@ -75,8 +72,20 @@ Farm 🚜 Cost: <span id="farmCost">5000</span>
 Factory 🏭 Cost: <span id="factoryCost">20000</span>
 </button>
 
+<br><br>
+
+<button onclick="openEgg()">
+Open Meme Egg 🥚 Cost: <span id="eggCost">2500</span>
+</button>
+
 <h3>
-Potatitios: <span id="workers">0</span> |
+Potatitios: <span id="potatitios">0</span> |
+Tomatitos: <span id="tomatitos">0</span> |
+Carrotitos: <span id="carrotitos">0</span> |
+SixSevenitos: <span id="sixsevenitos">0</span>
+</h3>
+
+<h3>
 Farms: <span id="farms">0</span> |
 Factories: <span id="factories">0</span>
 </h3>
@@ -84,11 +93,9 @@ Factories: <span id="factories">0</span>
 <script>
 
 let patatas = 0
-let perClick = 1
-let clickCost = 10
 
-let workers = 0
-let workerCost = 1000
+let perClick = 5
+let clickCost = 10
 
 let farms = 0
 let farmCost = 5000
@@ -96,13 +103,26 @@ let farmCost = 5000
 let factories = 0
 let factoryCost = 20000
 
+let eggCost = 2500
+
+let potatitios = 0
+let tomatitos = 0
+let carrotitos = 0
+let sixsevenitos = 0
+
+
 const patata = document.getElementById("patata")
 
+
 patata.onclick = function(){
-    patatas += perClick
+
+    let clickPower = perClick * (1 + carrotitos*0.2)
+
+    patatas += clickPower
+
     update()
-    saveGame()
 }
+
 
 function randomX(){
     return Math.random() * (window.innerWidth - 100)
@@ -112,147 +132,191 @@ function randomY(){
     return Math.random() * (window.innerHeight - 100)
 }
 
-function spawnWorker(){
+
+function spawnPet(imgURL){
 
     const img = document.createElement("img")
-    img.src = "https://files.catbox.moe/vzj2dz.png"
+
+    img.src = imgURL
     img.className = "worker"
+
     img.style.left = randomX()+"px"
     img.style.top = randomY()+"px"
+
     document.body.appendChild(img)
 
     setInterval(function(){
+
         img.style.left = randomX()+"px"
         img.style.top = randomY()+"px"
+
     },2000)
 }
 
+
 function spawnFarm(){
+
     const img = document.createElement("img")
+
     img.src = "https://files.catbox.moe/an1w50.png"
     img.className = "farm"
+
     img.style.left = randomX()+"px"
     img.style.top = randomY()+"px"
+
     document.body.appendChild(img)
 }
+
 
 function spawnFactory(){
+
     const img = document.createElement("img")
+
     img.src = "https://files.catbox.moe/6ibzxj.png"
     img.className = "factory"
+
     img.style.left = randomX()+"px"
     img.style.top = randomY()+"px"
+
     document.body.appendChild(img)
 }
 
+
+function openEgg(){
+
+    if(patatas < eggCost) return
+
+    patatas -= eggCost
+
+    let roll = Math.random()
+
+    if(roll < 0.50){
+
+        potatitios++
+        spawnPet("https://files.catbox.moe/vzj2dz.png")
+        alert("You got Potatitio 🥔")
+
+    }
+
+    else if(roll < 0.75){
+
+        tomatitos++
+        spawnPet("https://files.catbox.moe/03vj56.png")
+        alert("You got Tomatito 🍅")
+
+    }
+
+    else if(roll < 0.90){
+
+        carrotitos++
+        spawnPet("https://files.catbox.moe/2ohg41.png")
+        alert("You got Carrotito 🥕")
+
+    }
+
+    else{
+
+        sixsevenitos++
+        spawnPet("https://files.catbox.moe/gsn6qp.png")
+        alert("YOU GOT SIXSEVENITO 🔥")
+
+    }
+
+    eggCost = Math.floor(eggCost * 1.25)
+
+    update()
+}
+
+
 function buyClickUpgrade(){
+
     if(patatas >= clickCost){
+
         patatas -= clickCost
         perClick++
+
         clickCost = Math.floor(clickCost * 1.6)
+
         update()
-        saveGame()
     }
 }
 
-function buyWorker(){
-    if(patatas >= workerCost){
-        patatas -= workerCost
-        workers++
-        spawnWorker()
-        workerCost = Math.floor(workerCost * 1.4)
-        update()
-        saveGame()
-    }
-}
 
 function buyFarm(){
+
     if(patatas >= farmCost){
+
         patatas -= farmCost
         farms++
+
         spawnFarm()
+
         farmCost = Math.floor(farmCost * 1.5)
+
         update()
-        saveGame()
     }
 }
+
 
 function buyFactory(){
+
     if(patatas >= factoryCost){
+
         patatas -= factoryCost
         factories++
+
         spawnFactory()
+
         factoryCost = Math.floor(factoryCost * 1.6)
+
         update()
-        saveGame()
     }
 }
 
+
 function getPPS(){
-    return workers*1 + farms*5 + factories*20
+
+    let base =
+        farms*(75 + tomatitos*15) +
+        factories*300
+
+    base += potatitios*30
+
+    base = base * (1 + sixsevenitos*0.5)
+
+    return base
 }
 
+
 function update(){
+
     document.getElementById("counter").innerText =
-        "Patatas: " + Math.floor(patatas)
+    "Patatas: " + Math.floor(patatas)
 
     document.getElementById("pps").innerText =
-        "Patatas per second: " + getPPS()
+    "Patatas per second: " + Math.floor(getPPS())
 
     document.getElementById("clickCost").innerText = clickCost
-    document.getElementById("workerCost").innerText = workerCost
     document.getElementById("farmCost").innerText = farmCost
     document.getElementById("factoryCost").innerText = factoryCost
+    document.getElementById("eggCost").innerText = eggCost
 
-    document.getElementById("workers").innerText = workers
+    document.getElementById("potatitios").innerText = potatitios
+    document.getElementById("tomatitos").innerText = tomatitos
+    document.getElementById("carrotitos").innerText = carrotitos
+    document.getElementById("sixsevenitos").innerText = sixsevenitos
+
     document.getElementById("farms").innerText = farms
     document.getElementById("factories").innerText = factories
 }
 
-// --- Save / Load System ---
-function saveGame(){
-    const save = {
-        patatas,
-        perClick,
-        clickCost,
-        workers,
-        workerCost,
-        farms,
-        farmCost,
-        factories,
-        factoryCost
-    }
-    localStorage.setItem("patataClickerSave", JSON.stringify(save))
-}
 
-function loadGame(){
-    const save = JSON.parse(localStorage.getItem("patataClickerSave"))
-    if(save){
-        patatas = save.patatas
-        perClick = save.perClick
-        clickCost = save.clickCost
-        workers = save.workers
-        workerCost = save.workerCost
-        farms = save.farms
-        farmCost = save.farmCost
-        factories = save.factories
-        factoryCost = save.factoryCost
-
-        for(let i=0;i<workers;i++) spawnWorker()
-        for(let i=0;i<farms;i++) spawnFarm()
-        for(let i=0;i<factories;i++) spawnFactory()
-    }
-    update()
-}
-
-// --- Auto PPS ---
 setInterval(function(){
+
     patatas += getPPS()
     update()
-    saveGame()
-},1000)
 
-loadGame()
+},1000)
 
 </script>
 
