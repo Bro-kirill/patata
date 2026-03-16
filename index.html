@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Edición de Guardado Universal</title>
+    <title>5+5 Patata Clicker: Galactic Update</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -15,6 +15,7 @@
             --rare: #64b5f6;
             --epic: #ba68c8;
             --legendary: #ffd54f;
+            --space: #1a237e;
         }
 
         body {
@@ -48,13 +49,31 @@
             background: var(--panel);
             border: 3px solid #eee;
             border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 10px;
         }
+
+        /* NUEVA SECCIÓN GALÁCTICA */
+        .coming-soon-panel {
+            background: var(--space);
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: white;
+            border: 3px border: 3px solid #3f51b5;
+        }
+        .galactic-img { width: 50px; filter: drop-shadow(0 0 5px #7986cb); }
+        .galactic-info { text-align: left; }
+        .galactic-text { font-size: 12px; color: #9fa8da; text-transform: uppercase; letter-spacing: 1px; }
+        .galactic-counter { font-size: 20px; color: #fff; }
 
         #counter { font-size: 42px; margin: 0; color: #333; }
         #pps-display { font-size: 24px; color: var(--accent); margin: 5px 0; }
-        .yard-info { font-size: 16px; color: #558b2f; font-weight: bold; }
+        .yard-info { font-size: 14px; color: #558b2f; font-weight: bold; }
 
         #patata-main {
             width: 200px;
@@ -97,16 +116,8 @@
         .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
 
         #hatch-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            cursor: pointer;
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 10000; flex-direction: column; justify-content: center; align-items: center; color: white; cursor: pointer;
         }
 
         #egg-shaking-container { text-align: center; }
@@ -119,15 +130,10 @@
         }
 
         #hatch-result {
-            display: none;
-            text-align: center;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none; text-align: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         #res-img { width: 180px; margin: 20px 0; filter: drop-shadow(0 0 20px white); }
         .res-rarity { font-size: 18px; letter-spacing: 4px; margin-bottom: 5px; }
@@ -173,6 +179,14 @@
         <div class="yard-info">Ocupación del Patio: <span id="y-now">0</span> / <span id="y-max">50</span></div>
     </div>
 
+    <div class="coming-soon-panel">
+        <img class="galactic-img" src="https://files.catbox.moe/s3lpd5.png" alt="Patata Galáctica">
+        <div class="galactic-info">
+            <div class="galactic-text">Próximamente</div>
+            <div class="galactic-counter">✨ 0</div>
+        </div>
+    </div>
+
     <img id="patata-main" src="https://files.catbox.moe/srp1ta.png" alt="Patata">
 
     <div class="grid-layout">
@@ -186,14 +200,14 @@
 
     <div class="fusion-panel">
         <div style="font-size: 12px; color: var(--blue); margin-bottom: 5px;">🧬 GENÓMICA DE FUSIÓN</div>
-        <button class="fusion-btn" onclick="logic.fuseAll()">FUSIONAR MASCOTAS ELEGIBLES</button>
+        <button class="fusion-btn" onclick="logic.fuseAll()">FUSE ALL ELIGIBLE PETS</button>
     </div>
 
     <div style="font-size: 12px; margin-top: 15px; opacity: 0.5;">
-        Inventario:
-        P:<span id="inv-p">0</span> |
-        T:<span id="inv-t">0</span> |
-        C:<span id="inv-c">0</span> |
+        Inventario: 
+        P:<span id="inv-p">0</span> | 
+        T:<span id="inv-t">0</span> | 
+        C:<span id="inv-c">0</span> | 
         S:<span id="inv-s">0</span> |
         L:<span id="inv-l">0</span>
     </div>
@@ -218,11 +232,11 @@
         init() {
             this.load();
             document.getElementById('patata-main').addEventListener('click', () => this.clicker());
-
-            // LÓGICA DE BARRA ESPACIADORA
+            
+            // Lógica de Barra Espaciadora
             window.addEventListener('keydown', (e) => {
                 if (e.code === "Space") {
-                    e.preventDefault();
+                    e.preventDefault(); 
                     this.clicker();
                     const img = document.getElementById('patata-main');
                     img.style.transform = "scale(0.9)";
@@ -263,7 +277,7 @@
                 let r = Math.random();
                 let pet = {};
                 if (r < 0.50) {
-                    this.potatitios++;
+                    this.potatitios++; 
                     pet = { name: "Potatitio", rar: "COMÚN", img: "https://files.catbox.moe/vzj2dz.png", ab: "+100 PPS", cls: "glow-common" };
                 } else if (r < 0.75) {
                     this.tomatitos++;
@@ -277,7 +291,7 @@
                 }
                 this.showReveal(pet);
                 this.spawnPet(pet.img);
-                this.eggCost = Math.floor(this.eggCost * 1);
+                this.eggCost = Math.floor(this.eggCost * 1.15);
                 this.updateUI();
             }, 1000);
         },
@@ -450,7 +464,7 @@
             const blob = new Blob([data], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = "patata_guardado.json"; a.click();
+            a.href = url; a.download = "patata_save.json"; a.click();
         },
 
         importJSON() {
@@ -468,7 +482,7 @@
         },
 
         hardReset() {
-            if(confirm("¿Deseas borrar todo el progreso?")) { localStorage.clear(); location.reload(); }
+            if(confirm("¿Borrar todo el progreso?")) { localStorage.clear(); location.reload(); }
         }
     };
 
