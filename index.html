@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Galactic Update</title>
+    <title>5+5 Patata Clicker: Edición Galáctica</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -53,7 +53,7 @@
             margin-bottom: 10px;
         }
 
-        /* NUEVA SECCIÓN GALÁCTICA */
+        /* PANEL GALÁCTICO */
         .coming-soon-panel {
             background: var(--space);
             border-radius: 20px;
@@ -64,12 +64,12 @@
             justify-content: center;
             gap: 15px;
             color: white;
-            border: 3px border: 3px solid #3f51b5;
+            border: 3px solid #3f51b5;
         }
         .galactic-img { width: 50px; filter: drop-shadow(0 0 5px #7986cb); }
         .galactic-info { text-align: left; }
         .galactic-text { font-size: 12px; color: #9fa8da; text-transform: uppercase; letter-spacing: 1px; }
-        .galactic-counter { font-size: 20px; color: #fff; }
+        .galactic-counter { font-size: 20px; color: #fff; font-family: monospace; }
 
         #counter { font-size: 42px; margin: 0; color: #333; }
         #pps-display { font-size: 24px; color: var(--accent); margin: 5px 0; }
@@ -101,7 +101,6 @@
             position: absolute;
             transition: all 2s linear;
             pointer-events: none;
-            filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.1));
         }
 
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
@@ -112,9 +111,7 @@
         button:hover { transform: translateY(-4px); box-shadow: 0 5px 0 #333; }
         button:active { transform: translateY(0); box-shadow: none; }
         .egg-btn { grid-column: span 2; background: #ffeb3b; font-size: 20px; border-color: #fbc02d; }
-        .fusion-panel { background: #e1f5fe; border: 3px solid var(--blue); border-radius: 20px; padding: 15px; margin-top: 15px; }
-        .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
-
+        
         #hatch-overlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
             z-index: 10000; flex-direction: column; justify-content: center; align-items: center; color: white; cursor: pointer;
@@ -134,20 +131,10 @@
         }
 
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-        #res-img { width: 180px; margin: 20px 0; filter: drop-shadow(0 0 20px white); }
-        .res-rarity { font-size: 18px; letter-spacing: 4px; margin-bottom: 5px; }
-        .res-name { font-size: 48px; margin: 0; text-transform: uppercase; }
-        .res-ability { font-size: 20px; color: #a5d6a7; margin-top: 10px; font-style: italic; }
-        .click-anywhere { margin-top: 40px; font-size: 14px; opacity: 0.6; animation: pulse 1s infinite; }
-
         @keyframes pulse { 50% { opacity: 0.2; } }
 
-        .glow-common { text-shadow: 0 0 10px var(--common); color: var(--common); }
-        .glow-rare { text-shadow: 0 0 10px var(--rare); color: var(--rare); }
-        .glow-epic { text-shadow: 0 0 15px var(--epic); color: var(--epic); }
-        .glow-legendary { text-shadow: 0 0 20px var(--legendary); color: var(--legendary); }
-        .glow-lab { text-shadow: 0 0 15px #d1c4e9; color: #d1c4e9; }
+        .res-img { width: 180px; margin: 20px 0; filter: drop-shadow(0 0 20px white); }
+        .click-anywhere { margin-top: 40px; font-size: 14px; opacity: 0.6; animation: pulse 1s infinite; }
 
         .save-footer { margin-top: 20px; display: flex; justify-content: center; gap: 10px; }
         .mini-btn { font-size: 10px; padding: 5px 10px; opacity: 0.7; }
@@ -160,13 +147,12 @@
         <div id="egg-visual" class="egg-shaking">🥚</div>
         <h1 style="color: white;">ECLOSIONANDO...</h1>
     </div>
-
     <div id="hatch-result">
-        <div id="res-rarity" class="res-rarity">ESPECIAL</div>
-        <h2 id="res-name" class="res-name">Nuevo Asset</h2>
-        <img id="res-img" src="" alt="Nueva Mascota">
-        <div id="res-ability" class="res-ability">Información de Habilidad</div>
-        <div class="click-anywhere">HAZ CLICK EN CUALQUIER LUGAR PARA RECOGER</div>
+        <div id="res-rarity" style="font-size: 18px; letter-spacing: 4px;">ESPECIAL</div>
+        <h2 id="res-name" style="font-size: 48px; margin: 0;">NUEVO</h2>
+        <img id="res-img" class="res-img" src="" alt="Mascota">
+        <div id="res-ability" style="font-size: 20px; color: #a5d6a7; margin-top: 10px;">Habilidad</div>
+        <div class="click-anywhere">HAZ CLICK PARA CONTINUAR</div>
     </div>
 </div>
 
@@ -176,14 +162,14 @@
     <div class="stats-container">
         <h2 id="counter">0</h2>
         <div id="pps-display">PPS: 0</div>
-        <div class="yard-info">Ocupación del Patio: <span id="y-now">0</span> / <span id="y-max">50</span></div>
+        <div class="yard-info">Patio: <span id="y-now">0</span> / <span id="y-max">50</span></div>
     </div>
 
     <div class="coming-soon-panel">
-        <img class="galactic-img" src="https://files.catbox.moe/s3lpd5.png" alt="Patata Galáctica">
+        <img class="galactic-img" src="https://files.catbox.moe/s3lpd5.png" alt="Galáctica">
         <div class="galactic-info">
             <div class="galactic-text">Próximamente</div>
-            <div class="galactic-counter">✨ 0</div>
+            <div class="galactic-counter" id="galactic-timer">✨ 04:00:00</div>
         </div>
     </div>
 
@@ -191,31 +177,17 @@
 
     <div class="grid-layout">
         <button id="btn-egg" class="egg-btn" onclick="logic.hatchEgg()">Huevo Meme 🥚 | <span id="cost-egg">2500</span></button>
-        <button onclick="logic.buyClick()">Poder de Click | <span id="cost-click">10</span></button>
+        <button onclick="logic.buyClick()">Click Power | <span id="cost-click">10</span></button>
         <button onclick="logic.buySpace()">Espacio Patio | <span id="cost-space">10000</span></button>
-        <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5000</span></button>
-        <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25000</span></button>
-        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100000</span></button>
-    </div>
-
-    <div class="fusion-panel">
-        <div style="font-size: 12px; color: var(--blue); margin-bottom: 5px;">🧬 GENÓMICA DE FUSIÓN</div>
-        <button class="fusion-btn" onclick="logic.fuseAll()">FUSE ALL ELIGIBLE PETS</button>
-    </div>
-
-    <div style="font-size: 12px; margin-top: 15px; opacity: 0.5;">
-        Inventario: 
-        P:<span id="inv-p">0</span> | 
-        T:<span id="inv-t">0</span> | 
-        C:<span id="inv-c">0</span> | 
-        S:<span id="inv-s">0</span> |
-        L:<span id="inv-l">0</span>
+        <button onclick="logic.buyFarm()">Granja 🚜 | <span id="cost-farm">5000</span></button>
+        <button onclick="logic.buyFactory()">Fábrica 🏭 | <span id="cost-factory">25000</span></button>
+        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9;">Laboratorio 🧪 | <span id="cost-lab">100000</span></button>
     </div>
 
     <div class="save-footer">
-        <button class="mini-btn" onclick="logic.exportJSON()">Exportar JSON</button>
-        <button class="mini-btn" onclick="logic.importJSON()">Importar JSON</button>
-        <button class="mini-btn" style="color:red;" onclick="logic.hardReset()">Reseteo Total</button>
+        <button class="mini-btn" onclick="logic.exportJSON()">Exportar</button>
+        <button class="mini-btn" onclick="logic.importJSON()">Importar</button>
+        <button class="mini-btn" style="color:red;" onclick="logic.hardReset()">Borrar Todo</button>
     </div>
 </div>
 
@@ -223,6 +195,7 @@
 
 <script>
     const SAVE_KEY = "Patata_Universal_Save";
+    const TIMER_KEY = "Patata_Galactic_Timer";
 
     const logic = {
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
@@ -233,10 +206,10 @@
             this.load();
             document.getElementById('patata-main').addEventListener('click', () => this.clicker());
             
-            // Lógica de Barra Espaciadora
+            // BARRA ESPACIADORA
             window.addEventListener('keydown', (e) => {
                 if (e.code === "Space") {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     this.clicker();
                     const img = document.getElementById('patata-main');
                     img.style.transform = "scale(0.9)";
@@ -244,7 +217,26 @@
                 }
             });
 
-            setInterval(() => this.loop(), 1000);
+            // TEMPORIZADOR GALÁCTICO
+            let endTime = localStorage.getItem(TIMER_KEY);
+            if (!endTime) {
+                endTime = Date.now() + (4 * 60 * 60 * 1000);
+                localStorage.setItem(TIMER_KEY, endTime);
+            }
+
+            setInterval(() => {
+                const now = Date.now();
+                const diff = endTime - now;
+                if (diff <= 0) {
+                    document.getElementById('galactic-timer').innerText = "✨ ¡DISPONIBLE!";
+                } else {
+                    const h = Math.floor(diff / 3600000).toString().padStart(2,'0');
+                    const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2,'0');
+                    const s = Math.floor((diff % 60000) / 1000).toString().padStart(2,'0');
+                    document.getElementById('galactic-timer').innerText = `✨ ${h}:${m}:${s}`;
+                }
+                this.loop();
+            }, 1000);
         },
 
         clicker() {
@@ -260,35 +252,24 @@
 
         getPPS() {
             let pets = (this.potatitios * 100) + (this.tomatitos * 500) + (this.carrotitos * 2500);
-            let buildings = (this.farms * 1000) + (this.factories * 5000) + (this.labs * 100000);
-            return (pets + buildings) * Math.pow(2, this.sixsevenitos);
+            let bld = (this.farms * 1000) + (this.factories * 5000) + (this.labs * 100000);
+            return (pets + bld) * Math.pow(2, this.sixsevenitos);
         },
 
         hatchEgg() {
-            if (!this.checkYard()) return alert("¡Patio Lleno!");
+            if (this.getTotalPets() >= this.yardLimit) return alert("¡Patio Lleno!");
             if (this.patatas < this.eggCost) return;
-
             this.patatas -= this.eggCost;
             document.getElementById('hatch-overlay').style.display = 'flex';
             document.getElementById('egg-shaking-container').style.display = 'block';
             document.getElementById('hatch-result').style.display = 'none';
-
             setTimeout(() => {
                 let r = Math.random();
                 let pet = {};
-                if (r < 0.50) {
-                    this.potatitios++; 
-                    pet = { name: "Potatitio", rar: "COMÚN", img: "https://files.catbox.moe/vzj2dz.png", ab: "+100 PPS", cls: "glow-common" };
-                } else if (r < 0.75) {
-                    this.tomatitos++;
-                    pet = { name: "Tomatito", rar: "RARO", img: "https://files.catbox.moe/03vj56.png", ab: "+500 PPS", cls: "glow-rare" };
-                } else if (r < 0.95) {
-                    this.carrotitos++;
-                    pet = { name: "Carrotito", rar: "ÉPICO", img: "https://files.catbox.moe/2ohg41.png", ab: "+2,500 PPS y +50% Click", cls: "glow-epic" };
-                } else {
-                    this.sixsevenitos++;
-                    pet = { name: "SixSevenito", rar: "LEGENDARIO", img: "https://files.catbox.moe/gsn6qp.png", ab: "DUPLICA LA PRODUCCIÓN TOTAL", cls: "glow-legendary" };
-                }
+                if (r < 0.5) { this.potatitios++; pet = {name:"Potatitio", rar:"COMÚN", img:"https://files.catbox.moe/vzj2dz.png", ab:"+100 PPS"}; }
+                else if (r < 0.75) { this.tomatitos++; pet = {name:"Tomatito", rar:"RARO", img:"https://files.catbox.moe/03vj56.png", ab:"+500 PPS"}; }
+                else if (r < 0.95) { this.carrotitos++; pet = {name:"Carrotito", rar:"ÉPICO", img:"https://files.catbox.moe/2ohg41.png", ab:"+2.5k PPS & +50% Click"}; }
+                else { this.sixsevenitos++; pet = {name:"SixSevenito", rar:"LEGENDARIO", img:"https://files.catbox.moe/gsn6qp.png", ab:"X2 PRODUCCIÓN TOTAL"}; }
                 this.showReveal(pet);
                 this.spawnPet(pet.img);
                 this.eggCost = Math.floor(this.eggCost * 1.15);
@@ -297,118 +278,42 @@
         },
 
         buyLab() {
-            if (this.checkYard() && this.patatas >= this.labCost) {
-                this.patatas -= this.labCost;
-                this.labs++;
-                this.labCost = Math.floor(this.labCost * 2);
-                const pet = { name: "Laboratorio", rar: "CIENTÍFICO", img: "https://files.catbox.moe/jykhsp.png", ab: "Dando 100k/s", cls: "glow-lab" };
-                this.showReveal(pet);
-                this.spawnPet(pet.img);
-                this.updateUI();
+            if (this.getTotalPets() < this.yardLimit && this.patatas >= this.labCost) {
+                this.patatas -= this.labCost; this.labs++;
+                this.labCost *= 2; this.spawnPet("https://files.catbox.moe/jykhsp.png"); this.updateUI();
             }
         },
 
-        showReveal(pet) {
-            document.getElementById('hatch-overlay').style.display = 'flex';
+        showReveal(p) {
             document.getElementById('egg-shaking-container').style.display = 'none';
             document.getElementById('hatch-result').style.display = 'block';
-            document.getElementById('res-rarity').innerText = pet.rar;
-            document.getElementById('res-rarity').className = "res-rarity " + pet.cls;
-            document.getElementById('res-name').innerText = pet.name;
-            document.getElementById('res-img').src = pet.img;
-            document.getElementById('res-ability').innerText = pet.ab;
+            document.getElementById('res-rarity').innerText = p.rar;
+            document.getElementById('res-name').innerText = p.name;
+            document.getElementById('res-img').src = p.img;
+            document.getElementById('res-ability').innerText = p.ab;
         },
 
-        closeHatch() {
-            if (document.getElementById('hatch-result').style.display === 'block') {
-                document.getElementById('hatch-overlay').style.display = 'none';
-            }
-        },
-
-        buyClick() {
-            if (this.patatas >= this.clickCost) {
-                this.patatas -= this.clickCost; this.perClick += 5;
-                this.clickCost = Math.floor(this.clickCost * 1.8); this.updateUI();
-            }
-        },
-
-        buySpace() {
-            if (this.patatas >= this.spaceCost) {
-                this.patatas -= this.spaceCost; this.yardLimit += 25;
-                this.spaceCost = Math.floor(this.spaceCost * 3.5); this.updateUI();
-            }
-        },
-
-        buyFarm() {
-            if (this.checkYard() && this.patatas >= this.farmCost) {
-                this.patatas -= this.farmCost; this.farms++;
-                this.farmCost = Math.floor(this.farmCost * 1.6);
-                this.spawnPet("https://files.catbox.moe/an1w50.png"); this.updateUI();
-            }
-        },
-
-        buyFactory() {
-            if (this.checkYard() && this.patatas >= this.factoryCost) {
-                this.patatas -= this.factoryCost; this.factories++;
-                this.factoryCost = Math.floor(this.factoryCost * 1.7);
-                this.spawnPet("https://files.catbox.moe/6ibzxj.png"); this.updateUI();
-            }
-        },
-
-        fuseAll() {
-            let change = false;
-            while(this.potatitios >= 5) {
-                this.potatitios -= 5; this.tomatitos++;
-                this.removePet("vzj2dz.png", 5); this.spawnPet("https://files.catbox.moe/03vj56.png");
-                change = true;
-            }
-            while(this.tomatitos >= 10) {
-                this.tomatitos -= 10; this.carrotitos++;
-                this.removePet("03vj56.png", 10); this.spawnPet("https://files.catbox.moe/2ohg41.png");
-                change = true;
-            }
-            while(this.carrotitos >= 20) {
-                this.carrotitos -= 20; this.sixsevenitos++;
-                this.removePet("2ohg41.png", 20); this.spawnPet("https://files.catbox.moe/gsn6qp.png");
-                change = true;
-            }
-            if(change) this.updateUI();
-        },
-
-        checkYard() {
-            const total = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs;
-            return total < this.yardLimit;
-        },
+        closeHatch() { if(document.getElementById('hatch-result').style.display === 'block') document.getElementById('hatch-overlay').style.display = 'none'; },
+        buyClick() { if(this.patatas >= this.clickCost){ this.patatas -= this.clickCost; this.perClick += 5; this.clickCost = Math.floor(this.clickCost*1.8); this.updateUI(); }},
+        buySpace() { if(this.patatas >= this.spaceCost){ this.patatas -= this.spaceCost; this.yardLimit += 25; this.spaceCost *= 3; this.updateUI(); }},
+        buyFarm() { if(this.getTotalPets() < this.yardLimit && this.patatas >= this.farmCost){ this.patatas -= this.farmCost; this.farms++; this.farmCost *= 1.6; this.spawnPet("https://files.catbox.moe/an1w50.png"); this.updateUI(); }},
+        buyFactory() { if(this.getTotalPets() < this.yardLimit && this.patatas >= this.factoryCost){ this.patatas -= this.factoryCost; this.factories++; this.factoryCost *= 1.7; this.spawnPet("https://files.catbox.moe/6ibzxj.png"); this.updateUI(); }},
+        
+        getTotalPets() { return this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs; },
 
         spawnPet(url) {
-            const yard = document.getElementById('pet-yard');
             const img = document.createElement('img');
             img.src = url; img.className = 'pet-icon';
             img.style.left = Math.random() * 85 + "%";
             img.style.top = Math.random() * 80 + "%";
-            yard.appendChild(img);
-            setInterval(() => {
-                img.style.left = Math.random() * 85 + "%";
-                img.style.top = Math.random() * 80 + "%";
-            }, 2000 + Math.random() * 1000);
-        },
-
-        removePet(snippet, count) {
-            const yard = document.getElementById('pet-yard');
-            const pets = yard.getElementsByClassName('pet-icon');
-            let removed = 0;
-            for (let i = pets.length - 1; i >= 0; i--) {
-                if (pets[i].src.includes(snippet) && removed < count) {
-                    pets[i].remove(); removed++;
-                }
-            }
+            document.getElementById('pet-yard').appendChild(img);
+            setInterval(() => { img.style.left = Math.random()*85+"%"; img.style.top = Math.random()*80+"%"; }, 2000 + Math.random()*1000);
         },
 
         updateUI() {
             document.getElementById('counter').innerText = Math.floor(this.patatas).toLocaleString();
             document.getElementById('pps-display').innerText = "PPS: " + Math.floor(this.getPPS()).toLocaleString();
-            const total = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs;
-            document.getElementById('y-now').innerText = total;
+            document.getElementById('y-now').innerText = this.getTotalPets();
             document.getElementById('y-max').innerText = this.yardLimit;
             document.getElementById('cost-egg').innerText = this.eggCost.toLocaleString();
             document.getElementById('cost-click').innerText = this.clickCost.toLocaleString();
@@ -416,20 +321,11 @@
             document.getElementById('cost-farm').innerText = this.farmCost.toLocaleString();
             document.getElementById('cost-factory').innerText = this.factoryCost.toLocaleString();
             document.getElementById('cost-lab').innerText = this.labCost.toLocaleString();
-            document.getElementById('inv-p').innerText = this.potatitios;
-            document.getElementById('inv-t').innerText = this.tomatitos;
-            document.getElementById('inv-c').innerText = this.carrotitos;
-            document.getElementById('inv-s').innerText = this.sixsevenitos;
-            document.getElementById('inv-l').innerText = this.labs;
-
-            const eb = document.getElementById('btn-egg');
-            if (total >= this.yardLimit) { eb.style.background = "#ff5252"; eb.innerText = "PATIO LLENO"; }
-            else { eb.style.background = "#ffeb3b"; eb.innerHTML = `Huevo Meme 🥚 | <span id="cost-egg">${this.eggCost.toLocaleString()}</span>`; }
             this.save();
         },
 
         save() {
-            const data = {
+            const data = { 
                 patatas: this.patatas, perClick: this.perClick, clickCost: this.clickCost,
                 eggCost: this.eggCost, yardLimit: this.yardLimit, spaceCost: this.spaceCost,
                 farms: this.farms, farmCost: this.farmCost, factories: this.factories,
@@ -441,12 +337,10 @@
         },
 
         load() {
-            let raw = localStorage.getItem(SAVE_KEY);
-            if (!raw) raw = localStorage.getItem("Patata_MasterSave_v102");
+            let raw = localStorage.getItem(SAVE_KEY) || localStorage.getItem("Patata_MasterSave_v102");
             if (!raw) return;
             const s = JSON.parse(raw);
             Object.assign(this, s);
-
             const yard = document.getElementById('pet-yard');
             yard.innerHTML = "";
             for(let i=0; i<this.potatitios; i++) this.spawnPet("https://files.catbox.moe/vzj2dz.png");
@@ -460,30 +354,21 @@
         },
 
         exportJSON() {
-            const data = localStorage.getItem(SAVE_KEY);
-            const blob = new Blob([data], {type: "application/json"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = "patata_save.json"; a.click();
+            const blob = new Blob([localStorage.getItem(SAVE_KEY)], {type: "application/json"});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "patata_save.json"; a.click();
         },
 
         importJSON() {
-            const input = document.createElement('input');
-            input.type = 'file';
+            const input = document.createElement('input'); input.type = 'file';
             input.onchange = e => {
                 const reader = new FileReader();
-                reader.onload = event => {
-                    localStorage.setItem(SAVE_KEY, event.target.result);
-                    location.reload();
-                };
+                reader.onload = event => { localStorage.setItem(SAVE_KEY, event.target.result); location.reload(); };
                 reader.readAsText(e.target.files[0]);
             };
             input.click();
         },
 
-        hardReset() {
-            if(confirm("¿Borrar todo el progreso?")) { localStorage.clear(); location.reload(); }
-        }
+        hardReset() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
     };
 
     logic.init();
