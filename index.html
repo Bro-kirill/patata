@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Edición Galáctica</title>
+    <title>5+5 Patata Clicker: Definitive Edition</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -35,43 +35,34 @@
             margin: 0 auto;
             padding: 30px;
             box-shadow: 0 15px 0 var(--primary);
-            position: relative;
         }
 
-        h1 {
-            font-size: 36px;
-            color: var(--primary);
-            margin: 0 0 10px 0;
-            text-shadow: 2px 2px 0px #fff;
+        /* --- DISEÑO DE CONTADORES CON LÍNEAS --- */
+        .separator {
+            border: none;
+            border-top: 3px solid #333;
+            width: 100%;
+            margin: 10px 0;
         }
 
-        .stats-container {
-            background: var(--panel);
-            border: 3px solid #eee;
-            border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-
-        /* PANEL GALÁCTICO */
-        .coming-soon-panel {
-            background: var(--space);
-            border-radius: 20px;
-            padding: 10px;
-            margin-bottom: 20px;
+        #counter { font-size: 52px; margin: 0; color: #333; line-height: 1; }
+        
+        .galactic-row {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 15px;
-            color: white;
-            border: 3px solid #3f51b5;
+            margin-bottom: 15px;
         }
-        .galactic-img { width: 50px; filter: drop-shadow(0 0 5px #7986cb); }
-        .galactic-info { text-align: left; }
-        .galactic-text { font-size: 12px; color: #9fa8da; text-transform: uppercase; letter-spacing: 1px; }
-        .galactic-counter { font-size: 20px; color: #fff; font-family: monospace; }
 
-        #counter { font-size: 42px; margin: 0; color: #333; }
+        .galactic-box {
+            border: 3px solid #333;
+            padding: 5px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: #fff;
+            font-size: 20px;
+        }
+
         #pps-display { font-size: 24px; color: var(--accent); margin: 5px 0; }
         .yard-info { font-size: 14px; color: #558b2f; font-weight: bold; }
 
@@ -85,23 +76,13 @@
         #patata-main:active { transform: scale(0.9); }
 
         #pet-yard {
-            width: 100%;
-            height: 350px;
-            background: var(--yard);
-            border: 5px solid #558b2f;
-            border-radius: 30px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
+            width: 100%; height: 350px; background: var(--yard);
+            border: 5px solid #558b2f; border-radius: 30px;
+            margin: 20px 0; position: relative; overflow: hidden;
             box-shadow: inset 0 0 30px rgba(0,0,0,0.15);
         }
 
-        .pet-icon {
-            width: 60px;
-            position: absolute;
-            transition: all 2s linear;
-            pointer-events: none;
-        }
+        .pet-icon { width: 60px; position: absolute; transition: all 2s linear; pointer-events: none; }
 
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
         button {
@@ -110,31 +91,27 @@
         }
         button:hover { transform: translateY(-4px); box-shadow: 0 5px 0 #333; }
         button:active { transform: translateY(0); box-shadow: none; }
+        
         .egg-btn { grid-column: span 2; background: #ffeb3b; font-size: 20px; border-color: #fbc02d; }
         
+        .fusion-panel { background: #e1f5fe; border: 3px solid var(--blue); border-radius: 20px; padding: 15px; margin-top: 15px; }
+        .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
+
+        /* OVERLAY DE ECLOSIÓN */
         #hatch-overlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
             z-index: 10000; flex-direction: column; justify-content: center; align-items: center; color: white; cursor: pointer;
         }
-
-        #egg-shaking-container { text-align: center; }
         .egg-shaking { font-size: 120px; animation: eggShake 0.15s infinite; }
-
-        @keyframes eggShake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            75% { transform: rotate(-10deg); }
-        }
-
-        #hatch-result {
-            display: none; text-align: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        @keyframes eggShake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+        
+        #hatch-result { display: none; text-align: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes pulse { 50% { opacity: 0.2; } }
-
-        .res-img { width: 180px; margin: 20px 0; filter: drop-shadow(0 0 20px white); }
-        .click-anywhere { margin-top: 40px; font-size: 14px; opacity: 0.6; animation: pulse 1s infinite; }
+        
+        .glow-common { color: var(--common); }
+        .glow-rare { color: var(--rare); }
+        .glow-epic { color: var(--epic); }
+        .glow-legendary { color: var(--legendary); text-shadow: 0 0 10px gold; }
 
         .save-footer { margin-top: 20px; display: flex; justify-content: center; gap: 10px; }
         .mini-btn { font-size: 10px; padding: 5px 10px; opacity: 0.7; }
@@ -144,15 +121,15 @@
 
 <div id="hatch-overlay" onclick="logic.closeHatch()">
     <div id="egg-shaking-container">
-        <div id="egg-visual" class="egg-shaking">🥚</div>
+        <div class="egg-shaking">🥚</div>
         <h1 style="color: white;">ECLOSIONANDO...</h1>
     </div>
     <div id="hatch-result">
         <div id="res-rarity" style="font-size: 18px; letter-spacing: 4px;">ESPECIAL</div>
         <h2 id="res-name" style="font-size: 48px; margin: 0;">NUEVO</h2>
-        <img id="res-img" class="res-img" src="" alt="Mascota">
-        <div id="res-ability" style="font-size: 20px; color: #a5d6a7; margin-top: 10px;">Habilidad</div>
-        <div class="click-anywhere">HAZ CLICK PARA CONTINUAR</div>
+        <img id="res-img" style="width:180px; margin:20px 0; filter: drop-shadow(0 0 20px white);" src="" alt="Mascota">
+        <div id="res-ability" style="font-size: 20px; color: #a5d6a7;">Habilidad</div>
+        <div style="margin-top: 40px; font-size: 14px; opacity: 0.6;">HAZ CLICK PARA CONTINUAR</div>
     </div>
 </div>
 
@@ -160,17 +137,19 @@
     <h1>🥔 5+5 Patata</h1>
 
     <div class="stats-container">
+        <hr class="separator">
         <h2 id="counter">0</h2>
+        <hr class="separator">
+        
+        <div class="galactic-row">
+            <div class="galactic-box">
+                <img src="https://files.catbox.moe/s3lpd5.png" style="width:25px;">
+                <span>G. Patatas | 0</span>
+            </div>
+        </div>
+
         <div id="pps-display">PPS: 0</div>
         <div class="yard-info">Patio: <span id="y-now">0</span> / <span id="y-max">50</span></div>
-    </div>
-
-    <div class="coming-soon-panel">
-        <img class="galactic-img" src="https://files.catbox.moe/s3lpd5.png" alt="Galáctica">
-        <div class="galactic-info">
-            <div class="galactic-text">Próximamente</div>
-            <div class="galactic-counter" id="galactic-timer">✨ 04:00:00</div>
-        </div>
     </div>
 
     <img id="patata-main" src="https://files.catbox.moe/srp1ta.png" alt="Patata">
@@ -184,6 +163,15 @@
         <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9;">Laboratorio 🧪 | <span id="cost-lab">100000</span></button>
     </div>
 
+    <div class="fusion-panel">
+        <div style="font-size: 12px; color: var(--blue); margin-bottom: 5px;">🧬 LABORATORIO DE FUSIÓN</div>
+        <button class="fusion-btn" onclick="logic.fuseAll()">FUSIONAR MASCOTAS ELEGIBLES</button>
+    </div>
+
+    <div style="font-size: 11px; margin-top: 15px; opacity: 0.5;">
+        INV: P:<span id="inv-p">0</span> T:<span id="inv-t">0</span> C:<span id="inv-c">0</span> S:<span id="inv-s">0</span> L:<span id="inv-l">0</span>
+    </div>
+
     <div class="save-footer">
         <button class="mini-btn" onclick="logic.exportJSON()">Exportar</button>
         <button class="mini-btn" onclick="logic.importJSON()">Importar</button>
@@ -195,7 +183,6 @@
 
 <script>
     const SAVE_KEY = "Patata_Universal_Save";
-    const TIMER_KEY = "Patata_Galactic_Timer";
 
     const logic = {
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
@@ -206,7 +193,6 @@
             this.load();
             document.getElementById('patata-main').addEventListener('click', () => this.clicker());
             
-            // BARRA ESPACIADORA
             window.addEventListener('keydown', (e) => {
                 if (e.code === "Space") {
                     e.preventDefault();
@@ -217,36 +203,15 @@
                 }
             });
 
-            // TEMPORIZADOR GALÁCTICO
-            let endTime = localStorage.getItem(TIMER_KEY);
-            if (!endTime) {
-                endTime = Date.now() + (4 * 60 * 60 * 1000);
-                localStorage.setItem(TIMER_KEY, endTime);
-            }
-
             setInterval(() => {
-                const now = Date.now();
-                const diff = endTime - now;
-                if (diff <= 0) {
-                    document.getElementById('galactic-timer').innerText = "✨ ¡DISPONIBLE!";
-                } else {
-                    const h = Math.floor(diff / 3600000).toString().padStart(2,'0');
-                    const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2,'0');
-                    const s = Math.floor((diff % 60000) / 1000).toString().padStart(2,'0');
-                    document.getElementById('galactic-timer').innerText = `✨ ${h}:${m}:${s}`;
-                }
-                this.loop();
+                this.patatas += this.getPPS();
+                this.updateUI();
             }, 1000);
         },
 
         clicker() {
             const bonus = 1 + (this.carrotitos * 0.5);
             this.patatas += (this.perClick * bonus);
-            this.updateUI();
-        },
-
-        loop() {
-            this.patatas += this.getPPS();
             this.updateUI();
         },
 
@@ -257,19 +222,31 @@
         },
 
         hatchEgg() {
-            if (this.getTotalPets() >= this.yardLimit) return alert("¡Patio Lleno!");
+            if (this.getTotal() >= this.yardLimit) return alert("¡Patio Lleno!");
             if (this.patatas < this.eggCost) return;
+
             this.patatas -= this.eggCost;
-            document.getElementById('hatch-overlay').style.display = 'flex';
+            const overlay = document.getElementById('hatch-overlay');
+            overlay.style.display = 'flex';
             document.getElementById('egg-shaking-container').style.display = 'block';
             document.getElementById('hatch-result').style.display = 'none';
+
             setTimeout(() => {
                 let r = Math.random();
                 let pet = {};
-                if (r < 0.5) { this.potatitios++; pet = {name:"Potatitio", rar:"COMÚN", img:"https://files.catbox.moe/vzj2dz.png", ab:"+100 PPS"}; }
-                else if (r < 0.75) { this.tomatitos++; pet = {name:"Tomatito", rar:"RARO", img:"https://files.catbox.moe/03vj56.png", ab:"+500 PPS"}; }
-                else if (r < 0.95) { this.carrotitos++; pet = {name:"Carrotito", rar:"ÉPICO", img:"https://files.catbox.moe/2ohg41.png", ab:"+2.5k PPS & +50% Click"}; }
-                else { this.sixsevenitos++; pet = {name:"SixSevenito", rar:"LEGENDARIO", img:"https://files.catbox.moe/gsn6qp.png", ab:"X2 PRODUCCIÓN TOTAL"}; }
+                if (r < 0.50) {
+                    this.potatitios++; 
+                    pet = { name: "Potatitio", rar: "COMÚN", img: "https://files.catbox.moe/vzj2dz.png", ab: "+100 PPS", cls: "glow-common" };
+                } else if (r < 0.75) {
+                    this.tomatitos++;
+                    pet = { name: "Tomatito", rar: "RARO", img: "https://files.catbox.moe/03vj56.png", ab: "+500 PPS", cls: "glow-rare" };
+                } else if (r < 0.95) {
+                    this.carrotitos++;
+                    pet = { name: "Carrotito", rar: "ÉPICO", img: "https://files.catbox.moe/2ohg41.png", ab: "+2.5k PPS & +50% Click", cls: "glow-epic" };
+                } else {
+                    this.sixsevenitos++;
+                    pet = { name: "SixSevenito", rar: "LEGENDARIO", img: "https://files.catbox.moe/gsn6qp.png", ab: "X2 PRODUCCIÓN TOTAL", cls: "glow-legendary" };
+                }
                 this.showReveal(pet);
                 this.spawnPet(pet.img);
                 this.eggCost = Math.floor(this.eggCost * 1.15);
@@ -277,29 +254,33 @@
             }, 1000);
         },
 
-        buyLab() {
-            if (this.getTotalPets() < this.yardLimit && this.patatas >= this.labCost) {
-                this.patatas -= this.labCost; this.labs++;
-                this.labCost *= 2; this.spawnPet("https://files.catbox.moe/jykhsp.png"); this.updateUI();
-            }
-        },
-
         showReveal(p) {
             document.getElementById('egg-shaking-container').style.display = 'none';
             document.getElementById('hatch-result').style.display = 'block';
             document.getElementById('res-rarity').innerText = p.rar;
+            document.getElementById('res-rarity').className = p.cls;
             document.getElementById('res-name').innerText = p.name;
             document.getElementById('res-img').src = p.img;
             document.getElementById('res-ability').innerText = p.ab;
         },
 
         closeHatch() { if(document.getElementById('hatch-result').style.display === 'block') document.getElementById('hatch-overlay').style.display = 'none'; },
+
         buyClick() { if(this.patatas >= this.clickCost){ this.patatas -= this.clickCost; this.perClick += 5; this.clickCost = Math.floor(this.clickCost*1.8); this.updateUI(); }},
         buySpace() { if(this.patatas >= this.spaceCost){ this.patatas -= this.spaceCost; this.yardLimit += 25; this.spaceCost *= 3; this.updateUI(); }},
-        buyFarm() { if(this.getTotalPets() < this.yardLimit && this.patatas >= this.farmCost){ this.patatas -= this.farmCost; this.farms++; this.farmCost *= 1.6; this.spawnPet("https://files.catbox.moe/an1w50.png"); this.updateUI(); }},
-        buyFactory() { if(this.getTotalPets() < this.yardLimit && this.patatas >= this.factoryCost){ this.patatas -= this.factoryCost; this.factories++; this.factoryCost *= 1.7; this.spawnPet("https://files.catbox.moe/6ibzxj.png"); this.updateUI(); }},
-        
-        getTotalPets() { return this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs; },
+        buyFarm() { if(this.getTotal() < this.yardLimit && this.patatas >= this.farmCost){ this.patatas -= this.farmCost; this.farms++; this.farmCost *= 1.6; this.spawnPet("https://files.catbox.moe/an1w50.png"); this.updateUI(); }},
+        buyFactory() { if(this.getTotal() < this.yardLimit && this.patatas >= this.factoryCost){ this.patatas -= this.factoryCost; this.factories++; this.factoryCost *= 1.7; this.spawnPet("https://files.catbox.moe/6ibzxj.png"); this.updateUI(); }},
+        buyLab() { if(this.getTotal() < this.yardLimit && this.patatas >= this.labCost){ this.patatas -= this.labCost; this.labs++; this.labCost *= 2; this.spawnPet("https://files.catbox.moe/jykhsp.png"); this.updateUI(); }},
+
+        fuseAll() {
+            let c = false;
+            while(this.potatitios >= 5) { this.potatitios -= 5; this.tomatitos++; this.removePet("vzj2dz.png", 5); this.spawnPet("https://files.catbox.moe/03vj56.png"); c = true; }
+            while(this.tomatitos >= 10) { this.tomatitos -= 10; this.carrotitos++; this.removePet("03vj56.png", 10); this.spawnPet("https://files.catbox.moe/2ohg41.png"); c = true; }
+            while(this.carrotitos >= 20) { this.carrotitos -= 20; this.sixsevenitos++; this.removePet("2ohg41.png", 20); this.spawnPet("https://files.catbox.moe/gsn6qp.png"); c = true; }
+            if(c) this.updateUI();
+        },
+
+        getTotal() { return this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs; },
 
         spawnPet(url) {
             const img = document.createElement('img');
@@ -310,10 +291,19 @@
             setInterval(() => { img.style.left = Math.random()*85+"%"; img.style.top = Math.random()*80+"%"; }, 2000 + Math.random()*1000);
         },
 
+        removePet(snippet, count) {
+            const yard = document.getElementById('pet-yard');
+            const icons = yard.getElementsByClassName('pet-icon');
+            let removed = 0;
+            for(let i = icons.length - 1; i >= 0; i--) {
+                if(icons[i].src.includes(snippet) && removed < count) { icons[i].remove(); removed++; }
+            }
+        },
+
         updateUI() {
             document.getElementById('counter').innerText = Math.floor(this.patatas).toLocaleString();
             document.getElementById('pps-display').innerText = "PPS: " + Math.floor(this.getPPS()).toLocaleString();
-            document.getElementById('y-now').innerText = this.getTotalPets();
+            document.getElementById('y-now').innerText = this.getTotal();
             document.getElementById('y-max').innerText = this.yardLimit;
             document.getElementById('cost-egg').innerText = this.eggCost.toLocaleString();
             document.getElementById('cost-click').innerText = this.clickCost.toLocaleString();
@@ -321,6 +311,11 @@
             document.getElementById('cost-farm').innerText = this.farmCost.toLocaleString();
             document.getElementById('cost-factory').innerText = this.factoryCost.toLocaleString();
             document.getElementById('cost-lab').innerText = this.labCost.toLocaleString();
+            document.getElementById('inv-p').innerText = this.potatitios;
+            document.getElementById('inv-t').innerText = this.tomatitos;
+            document.getElementById('inv-c').innerText = this.carrotitos;
+            document.getElementById('inv-s').innerText = this.sixsevenitos;
+            document.getElementById('inv-l').innerText = this.labs;
             this.save();
         },
 
@@ -337,7 +332,7 @@
         },
 
         load() {
-            let raw = localStorage.getItem(SAVE_KEY) || localStorage.getItem("Patata_MasterSave_v102");
+            let raw = localStorage.getItem(SAVE_KEY);
             if (!raw) return;
             const s = JSON.parse(raw);
             Object.assign(this, s);
@@ -368,7 +363,7 @@
             input.click();
         },
 
-        hardReset() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+        hardReset() { if(confirm("¿Borrar todo el progreso?")) { localStorage.clear(); location.reload(); } }
     };
 
     logic.init();
