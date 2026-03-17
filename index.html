@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Turbo Edition 1.02</title>
+    <title>5+5 Patata Clicker: Edición de Guardado Universal</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -15,7 +15,7 @@
             --rare: #64b5f6;
             --epic: #ba68c8;
             --legendary: #ffd54f;
-            --turbo: #ff9800;
+            --galaxy: #9c27b0;
         }
 
         body {
@@ -55,6 +55,15 @@
 
         #counter { font-size: 42px; margin: 0; color: #333; }
         #pps-display { font-size: 24px; color: var(--accent); margin: 5px 0; }
+
+        /* New Galaxy Potatoes Display */
+        #galaxy-display {
+            font-size: 16px;
+            color: var(--galaxy);
+            margin: 5px 0 10px 0;
+            display: none; /* Hidden until first rebirth */
+        }
+
         .yard-info { font-size: 16px; color: #558b2f; font-weight: bold; }
 
         #patata-main {
@@ -93,13 +102,10 @@
         }
         button:hover { transform: translateY(-4px); box-shadow: 0 5px 0 #333; }
         button:active { transform: translateY(0); box-shadow: none; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-
         .egg-btn { grid-column: span 2; background: #ffeb3b; font-size: 20px; border-color: #fbc02d; }
-        .turbo-btn { grid-column: span 2; background: var(--turbo); color: white; border-color: #e65100; font-size: 18px; }
-        
         .fusion-panel { background: #e1f5fe; border: 3px solid var(--blue); border-radius: 20px; padding: 15px; margin-top: 15px; }
-        .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
+        .rebirth-panel { background: #f3e5f5; border: 3px solid var(--galaxy); border-radius: 20px; padding: 15px; margin-top: 15px; }
+        .action-btn { background: #fff; width: 100%; margin-top: 5px; }
 
         #hatch-overlay {
             display: none;
@@ -175,25 +181,30 @@
     <div class="stats-container">
         <h2 id="counter">0</h2>
         <div id="pps-display">PPS: 0</div>
+        <div id="galaxy-display">🌌 <span id="g-pots">0</span> Galaxy Potatoes (+<span id="g-mult">0</span>% Prod.)</div>
         <div class="yard-info">Ocupación del Patio: <span id="y-now">0</span> / <span id="y-max">50</span></div>
     </div>
 
     <img id="patata-main" src="https://files.catbox.moe/srp1ta.png" alt="Patata">
 
     <div class="grid-layout">
-        <button id="btn-egg" class="egg-btn" onclick="logic.hatchEgg()">Huevo Meme 🥚 | <span id="cost-egg">2500</span></button>
+        <button id="btn-egg" class="egg-btn" onclick="logic.hatchEgg()">Huevo Meme 🥚 | <span id="cost-egg">2.5k</span></button>
         <button onclick="logic.buyClick()">Poder de Click | <span id="cost-click">10</span></button>
-        <button onclick="logic.buySpace()">Espacio Patio | <span id="cost-space">10000</span></button>
-        <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5000</span></button>
-        <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25000</span></button>
-        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100000</span></button>
-        
-        <button id="btn-turbo" class="turbo-btn" onclick="logic.buyTurbo()">TURBO EGG BOOST ⚡ | <span>50.000.000.000</span></button>
+        <button onclick="logic.buySpace()">Espacio Patio | <span id="cost-space">10k</span></button>
+        <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5k</span></button>
+        <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25k</span></button>
+        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100k</span></button>
     </div>
 
     <div class="fusion-panel">
         <div style="font-size: 12px; color: var(--blue); margin-bottom: 5px;">🧬 GENÓMICA DE FUSIÓN</div>
-        <button class="fusion-btn" onclick="logic.fuseAll()">FUSIONAR MASCOTAS ELEGIBLES</button>
+        <button class="action-btn" style="color: var(--blue); border-color: var(--blue);" onclick="logic.fuseAll()">FUSIONAR MASCOTAS ELEGIBLES</button>
+    </div>
+
+    <div class="rebirth-panel">
+        <div style="font-size: 12px; color: var(--galaxy); margin-bottom: 5px;">🌌 RENACIMIENTO CÓSMICO</div>
+        <button class="action-btn" style="color: var(--galaxy); border-color: var(--galaxy);" onclick="logic.doRebirth()">RENACER | Coste: <span id="cost-rebirth">1b</span></button>
+        <div style="font-size: 10px; margin-top: 5px; opacity: 0.7;">Reinicia todo el progreso por 10 Galaxy Potatoes.</div>
     </div>
 
     <div style="font-size: 12px; margin-top: 15px; opacity: 0.5;">
@@ -215,13 +226,16 @@
 <div id="pet-yard"></div>
 
 <script>
-    const SAVE_KEY = "Patata_Universal_Save_v2"; 
+    const SAVE_KEY = "Patata_Universal_Save";
 
     const logic = {
+        // Variables de progreso normales
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
         farms: 0, farmCost: 5000, factories: 0, factoryCost: 25000, labs: 0, labCost: 100000,
         potatitios: 0, tomatitos: 0, carrotitos: 0, sixsevenitos: 0,
-        hasTurbo: false, turboCost: 50000000000,
+
+        // Variables de Rebirth (Nuevas)
+        rebirths: 0, rebirthCost: 1000000000, galaxyPotatoes: 0,
 
         init() {
             this.load();
@@ -240,9 +254,23 @@
             setInterval(() => this.loop(), 1000);
         },
 
+        // Nuevo formateador de números (1k, 1m, 1b)
+        formatNum(num) {
+            if (num === 0) return "0";
+            if (num >= 1e9) return (num / 1e9).toFixed(2).replace(/\.00$/, '') + 'b';
+            if (num >= 1e6) return (num / 1e6).toFixed(2).replace(/\.00$/, '') + 'm';
+            if (num >= 1e3) return (num / 1e3).toFixed(2).replace(/\.00$/, '') + 'k';
+            return Math.floor(num).toString();
+        },
+
+        // Calculador de Bonus Galáctico (+10% por Galaxy Potato)
+        getGalaxyBonus() {
+            return 1 + (this.galaxyPotatoes * 0.10);
+        },
+
         clicker() {
-            const bonus = 1 + (this.carrotitos * 0.5);
-            this.patatas += (this.perClick * bonus);
+            const petBonus = 1 + (this.carrotitos * 0.5);
+            this.patatas += (this.perClick * petBonus * this.getGalaxyBonus());
             this.updateUI();
         },
 
@@ -254,7 +282,7 @@
         getPPS() {
             let pets = (this.potatitios * 100) + (this.tomatitos * 500) + (this.carrotitos * 2500);
             let buildings = (this.farms * 1000) + (this.factories * 5000) + (this.labs * 100000);
-            return (pets + buildings) * Math.pow(2, this.sixsevenitos);
+            return (pets + buildings) * Math.pow(2, this.sixsevenitos) * this.getGalaxyBonus();
         },
 
         hatchEgg() {
@@ -265,8 +293,6 @@
             document.getElementById('hatch-overlay').style.display = 'flex';
             document.getElementById('egg-shaking-container').style.display = 'block';
             document.getElementById('hatch-result').style.display = 'none';
-
-            const hatchTime = this.hasTurbo ? 100 : 1000;
 
             setTimeout(() => {
                 let r = Math.random();
@@ -286,20 +312,9 @@
                 }
                 this.showReveal(pet);
                 this.spawnPet(pet.img);
-                
-                // CAMBIO AQUÍ: Multiplicador 1.02
-                this.eggCost = Math.floor(this.eggCost * 1.06);
-                
+                this.eggCost = Math.floor(this.eggCost * 1.15);
                 this.updateUI();
-            }, hatchTime);
-        },
-
-        buyTurbo() {
-            if (this.patatas >= this.turboCost && !this.hasTurbo) {
-                this.patatas -= this.turboCost;
-                this.hasTurbo = true;
-                this.updateUI();
-            }
+            }, 1000);
         },
 
         buyLab() {
@@ -381,6 +396,44 @@
             if(change) this.updateUI();
         },
 
+        // Nueva función de Renacimiento (Rebirth)
+        doRebirth() {
+            if (this.patatas >= this.rebirthCost) {
+                if(confirm(`¡RENACIMIENTO!\n¿Quieres perder todo tu progreso actual a cambio de 10 Galaxy Potatoes?\n\nLas Galaxy Potatoes aumentan toda tu producción de forma permanente.`)) {
+                    // Dar recompensas de rebirth
+                    this.rebirths++;
+                    this.galaxyPotatoes += 10;
+                    this.rebirthCost *= 3; // El coste se multiplica x3
+
+                    // Resetear estadísticas base
+                    this.patatas = 0;
+                    this.perClick = 5;
+                    this.clickCost = 10;
+                    this.eggCost = 2500;
+                    this.yardLimit = 50;
+                    this.spaceCost = 10000;
+                    this.farms = 0;
+                    this.farmCost = 5000;
+                    this.factories = 0;
+                    this.factoryCost = 25000;
+                    this.labs = 0;
+                    this.labCost = 100000;
+                    this.potatitios = 0;
+                    this.tomatitos = 0;
+                    this.carrotitos = 0;
+                    this.sixsevenitos = 0;
+
+                    // Limpiar el patio visual
+                    document.getElementById('pet-yard').innerHTML = "";
+
+                    alert("¡Has renacido con éxito! El poder de la galaxia fluye a través de tus patatas.");
+                    this.updateUI();
+                }
+            } else {
+                alert(`¡Necesitas al menos ${this.formatNum(this.rebirthCost)} patatas para renacer!`);
+            }
+        },
+
         checkYard() {
             const total = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs;
             return total < this.yardLimit;
@@ -411,34 +464,45 @@
         },
 
         updateUI() {
-            document.getElementById('counter').innerText = Math.floor(this.patatas).toLocaleString();
-            document.getElementById('pps-display').innerText = "PPS: " + Math.floor(this.getPPS()).toLocaleString();
+            // Actualizamos todos los textos usando formatNum()
+            document.getElementById('counter').innerText = this.formatNum(this.patatas);
+            document.getElementById('pps-display').innerText = "PPS: " + this.formatNum(this.getPPS());
+
             const total = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos + this.farms + this.factories + this.labs;
             document.getElementById('y-now').innerText = total;
             document.getElementById('y-max').innerText = this.yardLimit;
-            document.getElementById('cost-egg').innerText = this.eggCost.toLocaleString();
-            document.getElementById('cost-click').innerText = this.clickCost.toLocaleString();
-            document.getElementById('cost-space').innerText = this.spaceCost.toLocaleString();
-            document.getElementById('cost-farm').innerText = this.farmCost.toLocaleString();
-            document.getElementById('cost-factory').innerText = this.factoryCost.toLocaleString();
-            document.getElementById('cost-lab').innerText = this.labCost.toLocaleString();
+
+            document.getElementById('cost-egg').innerText = this.formatNum(this.eggCost);
+            document.getElementById('cost-click').innerText = this.formatNum(this.clickCost);
+            document.getElementById('cost-space').innerText = this.formatNum(this.spaceCost);
+            document.getElementById('cost-farm').innerText = this.formatNum(this.farmCost);
+            document.getElementById('cost-factory').innerText = this.formatNum(this.factoryCost);
+            document.getElementById('cost-lab').innerText = this.formatNum(this.labCost);
+            document.getElementById('cost-rebirth').innerText = this.formatNum(this.rebirthCost);
+
             document.getElementById('inv-p').innerText = this.potatitios;
             document.getElementById('inv-t').innerText = this.tomatitos;
             document.getElementById('inv-c').innerText = this.carrotitos;
             document.getElementById('inv-s').innerText = this.sixsevenitos;
             document.getElementById('inv-l').innerText = this.labs;
 
-            const eb = document.getElementById('btn-egg');
-            if (total >= this.yardLimit) { eb.style.background = "#ff5252"; eb.innerText = "PATIO LLENO"; }
-            else { eb.style.background = "#ffeb3b"; eb.innerHTML = `Huevo Meme 🥚 | <span id="cost-egg">${this.eggCost.toLocaleString()}</span>`; }
-            
-            const tb = document.getElementById('btn-turbo');
-            if(this.hasTurbo) {
-                tb.innerText = "⚡ TURBO ACTIVADO ⚡";
-                tb.disabled = true;
-                tb.style.background = "#4caf50";
+            // Mostrar display galáctico solo si tienes renacimientos
+            if (this.galaxyPotatoes > 0) {
+                document.getElementById('galaxy-display').style.display = 'block';
+                document.getElementById('g-pots').innerText = this.formatNum(this.galaxyPotatoes);
+                document.getElementById('g-mult').innerText = this.formatNum(this.galaxyPotatoes * 10);
+            } else {
+                document.getElementById('galaxy-display').style.display = 'none';
             }
 
+            const eb = document.getElementById('btn-egg');
+            if (total >= this.yardLimit) {
+                eb.style.background = "#ff5252";
+                eb.innerText = "PATIO LLENO";
+            } else {
+                eb.style.background = "#ffeb3b";
+                eb.innerHTML = `Huevo Meme 🥚 | <span id="cost-egg">${this.formatNum(this.eggCost)}</span>`;
+            }
             this.save();
         },
 
@@ -450,22 +514,18 @@
                 factoryCost: this.factoryCost, labs: this.labs, labCost: this.labCost,
                 potatitios: this.potatitios, tomatitos: this.tomatitos,
                 carrotitos: this.carrotitos, sixsevenitos: this.sixsevenitos,
-                hasTurbo: this.hasTurbo
+                // Guardado de Rebirth
+                rebirths: this.rebirths, rebirthCost: this.rebirthCost, galaxyPotatoes: this.galaxyPotatoes
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
         },
 
         load() {
             let raw = localStorage.getItem(SAVE_KEY);
-            if (!raw) raw = localStorage.getItem("Patata_Universal_Save");
+            if (!raw) raw = localStorage.getItem("Patata_MasterSave_v102");
             if (!raw) return;
-            
             const s = JSON.parse(raw);
-            Object.assign(this, s);
-
-            // FIX PARA AMIGOS: Recalcular costo basado en el nuevo multiplicador 1.02
-            const totalPets = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos;
-            this.eggCost = Math.floor(2500 * Math.pow(1.06, totalPets));
+            Object.assign(this, s); // Asignará valores guardados, manteniendo los defaults nuevos si no existen
 
             const yard = document.getElementById('pet-yard');
             yard.innerHTML = "";
@@ -484,7 +544,7 @@
             const blob = new Blob([data], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = "patata_turbo_save.json"; a.click();
+            a.href = url; a.download = "patata_guardado_galactico.json"; a.click();
         },
 
         importJSON() {
@@ -502,7 +562,9 @@
         },
 
         hardReset() {
-            if(confirm("¿Deseas borrar todo el progreso?")) { localStorage.clear(); location.reload(); }
+            if(confirm("¿Deseas borrar TODO el progreso de forma definitiva (incluyendo renacimientos)?")) {
+                localStorage.clear(); location.reload();
+            }
         }
     };
 
