@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Balanced Edition</title>
+    <title>5+5 Patata Clicker: Turbo Edition 1.02</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -201,8 +201,8 @@
         P:<span id="inv-p">0</span> |
         T:<span id="inv-t">0</span> |
         C:<span id="inv-c">0</span> |
-        S:<span id="inv-l">0</span> |
-        L:<span id="inv-l-real">0</span>
+        S:<span id="inv-s">0</span> |
+        L:<span id="inv-l">0</span>
     </div>
 
     <div class="save-footer">
@@ -215,7 +215,7 @@
 <div id="pet-yard"></div>
 
 <script>
-    const SAVE_KEY = "Patata_Universal_Save_v3"; 
+    const SAVE_KEY = "Patata_Universal_Save_v2"; 
 
     const logic = {
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
@@ -287,8 +287,9 @@
                 this.showReveal(pet);
                 this.spawnPet(pet.img);
                 
-                // FIXED MULTIPLIER HERE: 1.02 instead of 1.15
+                // CAMBIO AQUÍ: Multiplicador 1.02
                 this.eggCost = Math.floor(this.eggCost * 1.02);
+                
                 this.updateUI();
             }, hatchTime);
         },
@@ -425,7 +426,7 @@
             document.getElementById('inv-t').innerText = this.tomatitos;
             document.getElementById('inv-c').innerText = this.carrotitos;
             document.getElementById('inv-s').innerText = this.sixsevenitos;
-            document.getElementById('inv-l-real').innerText = this.labs;
+            document.getElementById('inv-l').innerText = this.labs;
 
             const eb = document.getElementById('btn-egg');
             if (total >= this.yardLimit) { eb.style.background = "#ff5252"; eb.innerText = "PATIO LLENO"; }
@@ -455,19 +456,16 @@
         },
 
         load() {
-            let raw = localStorage.getItem(SAVE_KEY) || 
-                      localStorage.getItem("Patata_Universal_Save_v2") || 
-                      localStorage.getItem("Patata_Universal_Save");
-            
+            let raw = localStorage.getItem(SAVE_KEY);
+            if (!raw) raw = localStorage.getItem("Patata_Universal_Save");
             if (!raw) return;
             
             const s = JSON.parse(raw);
             Object.assign(this, s);
 
-            // SPECIAL FIX: If egg cost is crazy high, reset it to 2500
-            if (this.eggCost > 1000000000) {
-                this.eggCost = 2500;
-            }
+            // FIX PARA AMIGOS: Recalcular costo basado en el nuevo multiplicador 1.02
+            const totalPets = this.potatitios + this.tomatitos + this.carrotitos + this.sixsevenitos;
+            this.eggCost = Math.floor(2500 * Math.pow(1.02, totalPets));
 
             const yard = document.getElementById('pet-yard');
             yard.innerHTML = "";
@@ -486,7 +484,7 @@
             const blob = new Blob([data], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = "patata_balanced.json"; a.click();
+            a.href = url; a.download = "patata_turbo_save.json"; a.click();
         },
 
         importJSON() {
