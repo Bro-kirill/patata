@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Edición de Guardado Universal</title>
+    <title>5+5 Patata Clicker: Edición Turbo</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -15,6 +15,7 @@
             --rare: #64b5f6;
             --epic: #ba68c8;
             --legendary: #ffd54f;
+            --turbo: #ff4081;
         }
 
         body {
@@ -93,6 +94,22 @@
         button:hover { transform: translateY(-4px); box-shadow: 0 5px 0 #333; }
         button:active { transform: translateY(0); box-shadow: none; }
         .egg-btn { grid-column: span 2; background: #ffeb3b; font-size: 20px; border-color: #fbc02d; }
+        
+        /* Estilo para el nuevo botón Turbo */
+        #btn-turbo { 
+            display: none; 
+            grid-column: span 2; 
+            background: var(--turbo); 
+            color: white; 
+            border-color: #c2185b;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0px rgba(255, 64, 129, 0.7); }
+            100% { box-shadow: 0 0 0 15px rgba(255, 64, 129, 0); }
+        }
+
         .fusion-panel { background: #e1f5fe; border: 3px solid var(--blue); border-radius: 20px; padding: 15px; margin-top: 15px; }
         .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
 
@@ -176,12 +193,13 @@
     <img id="patata-main" src="https://files.catbox.moe/srp1ta.png" alt="Patata">
 
     <div class="grid-layout">
-        <button id="btn-egg" class="egg-btn" onclick="logic.hatchEgg()">Huevo Meme 🥚 | <span id="cost-egg">2500</span></button>
+        <button id="btn-turbo" onclick="logic.buyTurbo()">⚡ ACTIVAR TURBO-ECLOSIÓN | 50B</button>
+        <button id="btn-egg" class="egg-btn" onclick="logic.hatchEgg()">Huevo Meme 🥚 | <span id="cost-egg">2,500</span></button>
         <button onclick="logic.buyClick()">Poder de Click | <span id="cost-click">10</span></button>
-        <button onclick="logic.buySpace()">Espacio Patio | <span id="cost-space">10000</span></button>
-        <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5000</span></button>
-        <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25000</span></button>
-        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100000</span></button>
+        <button onclick="logic.buySpace()">Espacio Patio | <span id="cost-space">10,000</span></button>
+        <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5,000</span></button>
+        <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25,000</span></button>
+        <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100,000</span></button>
     </div>
 
     <div class="fusion-panel">
@@ -208,18 +226,21 @@
 <div id="pet-yard"></div>
 
 <script>
-    const SAVE_KEY = "Patata_Universal_Save";
+    const SAVE_KEY = "Patata_Universal_Save_Turbo";
 
     const logic = {
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
         farms: 0, farmCost: 5000, factories: 0, factoryCost: 25000, labs: 0, labCost: 100000,
         potatitios: 0, tomatitos: 0, carrotitos: 0, sixsevenitos: 0,
+        
+        // Nuevas variables para el Turbo
+        fastHatch: false,
+        turboCost: 50000000000,
 
         init() {
             this.load();
             document.getElementById('patata-main').addEventListener('click', () => this.clicker());
 
-            // LÓGICA DE BARRA ESPACIADORA
             window.addEventListener('keydown', (e) => {
                 if (e.code === "Space") {
                     e.preventDefault();
@@ -259,6 +280,9 @@
             document.getElementById('egg-shaking-container').style.display = 'block';
             document.getElementById('hatch-result').style.display = 'none';
 
+            // Si el Turbo está activo, el delay es de 50ms, si no, de 1000ms
+            const delay = this.fastHatch ? 50 : 1000;
+
             setTimeout(() => {
                 let r = Math.random();
                 let pet = {};
@@ -279,7 +303,16 @@
                 this.spawnPet(pet.img);
                 this.eggCost = Math.floor(this.eggCost * 1.15);
                 this.updateUI();
-            }, 1000);
+            }, delay);
+        },
+
+        buyTurbo() {
+            if (this.patatas >= this.turboCost && !this.fastHatch) {
+                this.patatas -= this.turboCost;
+                this.fastHatch = true;
+                alert("¡TURBO ACTIVADO! Los huevos ahora eclosionan instantáneamente.");
+                this.updateUI();
+            }
         },
 
         buyLab() {
@@ -408,6 +441,18 @@
             document.getElementById('inv-s').innerText = this.sixsevenitos;
             document.getElementById('inv-l').innerText = this.labs;
 
+            // Mostrar botón Turbo si tiene 50B o ya lo compró
+            const turboBtn = document.getElementById('btn-turbo');
+            if (this.patatas >= 50000000000 || this.fastHatch) {
+                turboBtn.style.display = 'block';
+                if (this.fastHatch) {
+                    turboBtn.innerText = "⚡ MODO TURBO: ACTIVO";
+                    turboBtn.style.opacity = "0.6";
+                    turboBtn.style.pointerEvents = "none";
+                    turboBtn.style.animation = "none";
+                }
+            }
+
             const eb = document.getElementById('btn-egg');
             if (total >= this.yardLimit) { eb.style.background = "#ff5252"; eb.innerText = "PATIO LLENO"; }
             else { eb.style.background = "#ffeb3b"; eb.innerHTML = `Huevo Meme 🥚 | <span id="cost-egg">${this.eggCost.toLocaleString()}</span>`; }
@@ -421,14 +466,14 @@
                 farms: this.farms, farmCost: this.farmCost, factories: this.factories,
                 factoryCost: this.factoryCost, labs: this.labs, labCost: this.labCost,
                 potatitios: this.potatitios, tomatitos: this.tomatitos,
-                carrotitos: this.carrotitos, sixsevenitos: this.sixsevenitos
+                carrotitos: this.carrotitos, sixsevenitos: this.sixsevenitos,
+                fastHatch: this.fastHatch
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
         },
 
         load() {
             let raw = localStorage.getItem(SAVE_KEY);
-            if (!raw) raw = localStorage.getItem("Patata_MasterSave_v102");
             if (!raw) return;
             const s = JSON.parse(raw);
             Object.assign(this, s);
