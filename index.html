@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>5+5 Patata Clicker: Edición de Guardado Universal</title>
+    <title>5+5 Patata Clicker: Turbo Edition</title>
     <style>
         :root {
             --primary: #8d7a4b;
@@ -15,6 +15,7 @@
             --rare: #64b5f6;
             --epic: #ba68c8;
             --legendary: #ffd54f;
+            --turbo: #ff9800;
         }
 
         body {
@@ -92,7 +93,11 @@
         }
         button:hover { transform: translateY(-4px); box-shadow: 0 5px 0 #333; }
         button:active { transform: translateY(0); box-shadow: none; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
         .egg-btn { grid-column: span 2; background: #ffeb3b; font-size: 20px; border-color: #fbc02d; }
+        .turbo-btn { grid-column: span 2; background: var(--turbo); color: white; border-color: #e65100; font-size: 18px; }
+        
         .fusion-panel { background: #e1f5fe; border: 3px solid var(--blue); border-radius: 20px; padding: 15px; margin-top: 15px; }
         .fusion-btn { background: #fff; color: var(--blue); border-color: var(--blue); width: 100%; margin-top: 5px; }
 
@@ -182,6 +187,8 @@
         <button onclick="logic.buyFarm()">Granja Patata 🚜 | <span id="cost-farm">5000</span></button>
         <button onclick="logic.buyFactory()">Fábrica Patata 🏭 | <span id="cost-factory">25000</span></button>
         <button onclick="logic.buyLab()" style="grid-column: span 2; background: #d1c4e9; border-color: #9575cd;">Laboratorio Patata 🧪 | <span id="cost-lab">100000</span></button>
+        
+        <button id="btn-turbo" class="turbo-btn" onclick="logic.buyTurbo()">TURBO EGG BOOST ⚡ | <span>50.000.000.000</span></button>
     </div>
 
     <div class="fusion-panel">
@@ -208,18 +215,18 @@
 <div id="pet-yard"></div>
 
 <script>
-    const SAVE_KEY = "Patata_Universal_Save";
+    const SAVE_KEY = "Patata_Universal_Save_v2"; // Updated key to prevent conflict
 
     const logic = {
         patatas: 0, perClick: 5, clickCost: 10, eggCost: 2500, yardLimit: 50, spaceCost: 10000,
         farms: 0, farmCost: 5000, factories: 0, factoryCost: 25000, labs: 0, labCost: 100000,
         potatitios: 0, tomatitos: 0, carrotitos: 0, sixsevenitos: 0,
+        hasTurbo: false, turboCost: 50000000000,
 
         init() {
             this.load();
             document.getElementById('patata-main').addEventListener('click', () => this.clicker());
 
-            // LÓGICA DE BARRA ESPACIADORA
             window.addEventListener('keydown', (e) => {
                 if (e.code === "Space") {
                     e.preventDefault();
@@ -259,6 +266,9 @@
             document.getElementById('egg-shaking-container').style.display = 'block';
             document.getElementById('hatch-result').style.display = 'none';
 
+            // Turbo effect: reduces wait time from 1000ms to 100ms
+            const hatchTime = this.hasTurbo ? 100 : 1000;
+
             setTimeout(() => {
                 let r = Math.random();
                 let pet = {};
@@ -279,7 +289,15 @@
                 this.spawnPet(pet.img);
                 this.eggCost = Math.floor(this.eggCost * 1.15);
                 this.updateUI();
-            }, 1000);
+            }, hatchTime);
+        },
+
+        buyTurbo() {
+            if (this.patatas >= this.turboCost && !this.hasTurbo) {
+                this.patatas -= this.turboCost;
+                this.hasTurbo = true;
+                this.updateUI();
+            }
         },
 
         buyLab() {
@@ -411,6 +429,15 @@
             const eb = document.getElementById('btn-egg');
             if (total >= this.yardLimit) { eb.style.background = "#ff5252"; eb.innerText = "PATIO LLENO"; }
             else { eb.style.background = "#ffeb3b"; eb.innerHTML = `Huevo Meme 🥚 | <span id="cost-egg">${this.eggCost.toLocaleString()}</span>`; }
+            
+            // UI for Turbo Button
+            const tb = document.getElementById('btn-turbo');
+            if(this.hasTurbo) {
+                tb.innerText = "⚡ TURBO ACTIVADO ⚡";
+                tb.disabled = true;
+                tb.style.background = "#4caf50";
+            }
+
             this.save();
         },
 
@@ -421,15 +448,19 @@
                 farms: this.farms, farmCost: this.farmCost, factories: this.factories,
                 factoryCost: this.factoryCost, labs: this.labs, labCost: this.labCost,
                 potatitios: this.potatitios, tomatitos: this.tomatitos,
-                carrotitos: this.carrotitos, sixsevenitos: this.sixsevenitos
+                carrotitos: this.carrotitos, sixsevenitos: this.sixsevenitos,
+                hasTurbo: this.hasTurbo
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
         },
 
         load() {
             let raw = localStorage.getItem(SAVE_KEY);
+            // Fallback to old key if new one doesn't exist yet
+            if (!raw) raw = localStorage.getItem("Patata_Universal_Save");
             if (!raw) raw = localStorage.getItem("Patata_MasterSave_v102");
             if (!raw) return;
+            
             const s = JSON.parse(raw);
             Object.assign(this, s);
 
@@ -450,7 +481,7 @@
             const blob = new Blob([data], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = "patata_guardado.json"; a.click();
+            a.href = url; a.download = "patata_turbo_save.json"; a.click();
         },
 
         importJSON() {
